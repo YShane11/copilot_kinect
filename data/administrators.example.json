@@ -1,0 +1,15 @@
+[
+  {
+    "name": "Teacher Demo",
+    "帳號": "teacher",
+    "單位": "iSchool",
+    "職稱": "Teacher",
+    "password": "change-me",
+    "courses": [
+      {
+        "id": "AI101",
+        "name": "人工智慧導論"
+      }
+    ]
+  }
+]

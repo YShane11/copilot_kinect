@@ -1,0 +1,39 @@
+.venv/
+libfreenect/
+__pycache__/
+*.pyc
+
+# Local configuration / secrets
+.env
+*.local
+
+# Runtime outputs and generated data
+history/
+分群資料/
+紀錄.txt
+data/embeddings/
+data/student_faces/
+data/video_tuning/
+data/recognition_snapshot_compare/
+data/presence_records.json
+data/_presence_records_tuning.json
+data/administrators.json
+data/user.json
+data/test_videos/
+test.py
+reels/recordings/
+*.mp4
+*.avi
+
+# Large local model weights
+models/**/*.pt
+*.pt
+
+# Python / tooling caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
