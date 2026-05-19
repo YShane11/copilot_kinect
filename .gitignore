@@ -9,8 +9,6 @@ __pycache__/
 
 # Runtime outputs and generated data
 history/
-分群資料/
-紀錄.txt
 data/embeddings/
 data/student_faces/
 data/video_tuning/

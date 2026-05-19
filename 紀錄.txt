@@ -1,0 +1,13 @@
+加一個結束點名功能 結束點名後就全力去捕捉已經點名到的學生
+把錄影功能加進去系統
+
+
+YOLO26 Detection
+        ↓
+Roboflow Trackers：ByteTrack / OC-SORT / BoT-SORT
+        ↓
+根據每個 tracker_id 裁切 person crop
+        ↓
+RTMPose 做姿態估計
+        ↓
+每個人維持固定 ID，統計行為特徵
