@@ -10,7 +10,7 @@ Kinect + YOLO + Flask 的課堂出席與姿態分析系統。專案整合 Kinect
 - Flask dashboard 即時顯示出席、辨識、影像串流與課堂指標
 - 課堂紀錄輸出為 CSV / JSON，支援後續分析
 - 可選 Power Automate webhook，上傳課堂報表或紀錄
-- `k-means.py` 與 `分群資料/` 用於學生行為特徵分群分析
+- `clustering/k_means.py` 與 `clustering/` 用於學生行為特徵分群分析
 
 ## 專案結構
 
@@ -24,7 +24,7 @@ reels/                         Kinect 錄影工具
 data/                          設定範例、驗證資料與執行資料
 models/yolo/                   本機 YOLO 權重放置位置
 tests/                         單元測試
-分群資料/                       K-Means 分群輸出、圖表與分析報告
+clustering/                    K-Means 分群腳本、輸出、圖表與分析報告
 ```
 
 ## 環境需求
@@ -110,7 +110,7 @@ http://127.0.0.1:5000/dashboard
 執行 K-Means 分群分析：
 
 ```powershell
-.\.venv\Scripts\python.exe k-means.py
+.\.venv\Scripts\python.exe clustering\k_means.py
 ```
 
 ## 測試

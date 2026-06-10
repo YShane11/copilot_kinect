@@ -1,18 +1,18 @@
+# Virtual environments and third-party sources
 .venv/
 libfreenect/
-__pycache__/
-*.pyc
 
 # Local configuration / secrets
 .env
 *.local
 
-# Runtime outputs and generated data
+# Runtime outputs and local/generated data
 history/
 data/embeddings/
 data/student_faces/
 data/video_tuning/
 data/recognition_snapshot_compare/
+data/video_runs/
 data/presence_records.json
 data/_presence_records_tuning.json
 data/administrators.json
@@ -27,11 +27,16 @@ reels/recordings/
 models/**/*.pt
 *.pt
 
-# Python / tooling caches
+# Python and tooling caches
+__pycache__/
+*/__pycache__/
+*.py[cod]
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.ipynb_checkpoints/
 
 # OS / editor noise
 .DS_Store
 Thumbs.db
+desktop.ini

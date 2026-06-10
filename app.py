@@ -248,7 +248,7 @@ class MinuteStudentCsvExporter:
         metrics_dir = self.base_dir / 'static' / 'mock_metrics'
         for metric_key in self.HISTORY_METRIC_KEYS:
             metric_rows = []
-            csv_path = metrics_dir / f'{metric_key}.csv'
+            csv_path = metrics_dir / f'{metric_key.replace("-", "_")}.csv'
             if csv_path.exists() and csv_path.is_file():
                 try:
                     with csv_path.open('r', encoding='utf-8-sig', newline='') as csv_file:

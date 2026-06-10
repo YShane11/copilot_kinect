@@ -14,18 +14,24 @@ from sklearn.preprocessing import StandardScaler
 
 
 RAW_INPUT_GLOB = "classroom-metrics-*.csv"
-OUTPUT_DIR = Path("\u5206\u7fa4\u8cc7\u6599")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+HISTORY_DIR = PROJECT_ROOT / "history"
+OUTPUT_DIR = PROJECT_ROOT / "clustering"
 AUGMENTED_OUTPUT_PATH = OUTPUT_DIR / "kmeans_student_features.csv"
-ELBOW_OUTPUT_PATH = OUTPUT_DIR / "kmeans-elbow.png"
-CLUSTER_OUTPUT_PATH = OUTPUT_DIR / "kmeans-clusters.png"
-CLUSTER_3D_OUTPUT_PATH = OUTPUT_DIR / "kmeans-clusters-3d.png"
+ELBOW_OUTPUT_PATH = OUTPUT_DIR / "kmeans_elbow.png"
+CLUSTER_OUTPUT_PATH = OUTPUT_DIR / "kmeans_clusters.png"
+CLUSTER_3D_OUTPUT_PATH = OUTPUT_DIR / "kmeans_clusters_3d.png"
 CLUSTER_CMAP = "viridis"
 ANALYSIS_OUTPUT_PATH = OUTPUT_DIR / "cluster_analysis.md"
 TITLE_FONT_SIZE = 20
 LABEL_FONT_SIZE = 15
 TICK_FONT_SIZE = 13
 LEGEND_FONT_SIZE = 13
+CHINESE_FONT_FAMILY = ["Microsoft JhengHei", "Microsoft YaHei", "SimHei", "KaiTi", "Arial Unicode MS"]
 RELATIVE_NORMAL_THRESHOLD = 0.8
+
+plt.rcParams["font.sans-serif"] = CHINESE_FONT_FAMILY + plt.rcParams["font.sans-serif"]
+plt.rcParams["axes.unicode_minus"] = False
 
 TOTAL_STUDENTS = 200
 RANDOM_SEED = 42
@@ -78,14 +84,14 @@ FEATURE_COLUMNS = [
 ]
 
 FEATURE_PLOT_LABELS = [
-    "Focus",
-    "Head stable",
-    "Fatigue",
-    "Leaning",
-    "Desk distance",
-    "Stillness",
-    "Hand raise",
-    "Shared attention",
+    "專注度",
+    "姿態穩定度",
+    "疲勞度",
+    "上課投入度",
+    "專心距離",
+    "發呆指數",
+    "參與度",
+    "互動模式",
 ]
 
 SYNTHETIC_NUMERIC_COLUMNS = [*FEATURE_COLUMNS, SCORE_COLUMN]
@@ -210,9 +216,9 @@ def load_base_data(input_paths: list[Path] | None = None) -> pd.DataFrame:
 
 
 def resolve_raw_input_paths() -> list[Path]:
-    candidates = sorted(Path("history").glob(RAW_INPUT_GLOB))
+    candidates = sorted(HISTORY_DIR.glob(RAW_INPUT_GLOB))
     if not candidates:
-        raise FileNotFoundError(f"No input CSV matched history/{RAW_INPUT_GLOB}")
+        raise FileNotFoundError(f"No input CSV matched {HISTORY_DIR / RAW_INPUT_GLOB}")
     return candidates
 
 
@@ -413,7 +419,7 @@ def save_cluster_score_plots(clustered: pd.DataFrame) -> list[Path]:
         median_score = cluster_scores.median()
         std_score = cluster_scores.std(ddof=0)
 
-        output_path = OUTPUT_DIR / f"score-cluster-{cluster_id}.png"
+        output_path = OUTPUT_DIR / f"score_cluster_{cluster_id}.png"
         plt.figure(figsize=(8, 5))
         plt.hist(
             cluster_scores,
@@ -454,9 +460,9 @@ def save_cluster_feature_plots(clustered: pd.DataFrame) -> list[Path]:
     global_stds = clustered[FEATURE_COLUMNS].std(ddof=0).replace(0, 1)
 
     for cluster_id, means in feature_means.iterrows():
-        raw_output_path = OUTPUT_DIR / f"features-raw-cluster-{cluster_id}.png"
-        relative_output_path = OUTPUT_DIR / f"features-relative-cluster-{cluster_id}.png"
-        relative_mask_output_path = OUTPUT_DIR / f"features-relative-mask-cluster-{cluster_id}.png"
+        raw_output_path = OUTPUT_DIR / f"features_raw_cluster_{cluster_id}.png"
+        relative_output_path = OUTPUT_DIR / f"features_relative_cluster_{cluster_id}.png"
+        relative_mask_output_path = OUTPUT_DIR / f"features_relative_mask_cluster_{cluster_id}.png"
         color = plt.get_cmap(CLUSTER_CMAP)(cluster_id / max(clustered["cluster"].max(), 1))
 
         plt.figure(figsize=(11, 6))
@@ -524,7 +530,7 @@ def save_cluster_feature_plots(clustered: pd.DataFrame) -> list[Path]:
                 bbox={"boxstyle": "round,pad=0.15", "facecolor": "white", "alpha": 0.72, "edgecolor": "none"},
             )
         plt.axvline(0, color="#333333", linewidth=1.5)
-        plt.yticks(y, FEATURE_PLOT_LABELS, fontsize=12)
+        plt.yticks(y, FEATURE_PLOT_LABELS, fontsize=17)
         plt.xticks(fontsize=TICK_FONT_SIZE)
         plt.xlabel("Difference from overall average (standard deviations)", fontsize=LABEL_FONT_SIZE)
         plt.grid(axis="x", alpha=0.25)
@@ -553,16 +559,16 @@ def save_cluster_feature_plots(clustered: pd.DataFrame) -> list[Path]:
                 bbox={"boxstyle": "round,pad=0.15", "facecolor": "white", "alpha": 0.72, "edgecolor": "none"},
             )
         plt.axvline(0, color="#333333", linewidth=1.5)
-        plt.yticks(y, FEATURE_PLOT_LABELS, fontsize=12)
+        plt.yticks(y, FEATURE_PLOT_LABELS, fontsize=17)
         plt.xticks(fontsize=TICK_FONT_SIZE)
-        plt.xlabel("Difference from overall average (standard deviations)", fontsize=LABEL_FONT_SIZE)
+        plt.xlabel("Difference from overall average (standard deviations)", fontsize=17)
         plt.grid(axis="x", alpha=0.25)
         plt.xlim(-limit, limit)
         plt.gca().invert_yaxis()
         y_top = -0.72
-        plt.text(-limit * 0.62, y_top, "Too low", ha="center", va="center", fontsize=11, color="#9b2c2c")
-        plt.text(0, y_top, "Normal", ha="center", va="center", fontsize=11, color="#4b5563")
-        plt.text(limit * 0.62, y_top, "Too high", ha="center", va="center", fontsize=11, color="#1f4e8c")
+        plt.text(-limit * 0.62, y_top, "過低", ha="center", va="center", fontsize=15, color="#9b2c2c")
+        plt.text(0, y_top, "正常", ha="center", va="center", fontsize=15, color="#4b5563")
+        plt.text(limit * 0.62, y_top, "過高", ha="center", va="center", fontsize=15, color="#1f4e8c")
         plt.tight_layout()
         plt.savefig(relative_mask_output_path, dpi=170)
         plt.close()
